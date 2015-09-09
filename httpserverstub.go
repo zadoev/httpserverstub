@@ -6,10 +6,9 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
-
-	"./assertion"
-	"./logging"
-	"./protocol"
+	"github.com/zadoev/httpserverstub/assertion"
+	"github.com/zadoev/httpserverstub/logging"
+	"github.com/zadoev/httpserverstub/protocol"
 )
 
 const CONTROL_HEADER = "X-Stuby-Control"

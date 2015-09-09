@@ -1,7 +1,7 @@
 package assertion
 
 import (
-	"../protocol"
+	"github.com/zadoev/httpserverstub/protocol"
 	"container/list"
 	"fmt"
 	"net/http"
