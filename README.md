@@ -63,6 +63,12 @@ http POST 127.0.0.1:8181/ X-Stuby-Control:assert
     
     No match for: GET /path
 
+### Usage with docker 
+
+Example with docker container from docker hub 
+
+https://hub.docker.com/r/zadoev/httpserverstub/
+
 
 ### Known bugs 
 
@@ -81,4 +87,6 @@ For non regular http codes endless connection happens
 
 ### Notes
 
-First project with golang. And i'm not planning make it perfect and with a lot of functionality. I will commit only what i need for work. 
+First project with golang. And i'm not planning make it perfect and with a lot of functionality. I will commit only what i need for work.
+ 
+ 
