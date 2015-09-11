@@ -92,8 +92,16 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		response := assertion.Assert(&expectation, request)
 		logging.Info.Printf(
 			"%v %v %v \n", request.Method, response.Status, request.Path)
+
+		for key, val := range(response.Headers) {
+			w.Header().Set(key, val)
+			logging.Trace.Printf(
+				"Set up header: '%v':'%v'\n", key, val)
+		}
+
 		w.WriteHeader(response.Status)
 		io.WriteString(w, response.Body)
+		logging.Trace.Println("Response:", response.Body)
 	}
 }
 
