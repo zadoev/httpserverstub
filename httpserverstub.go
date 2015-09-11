@@ -15,7 +15,8 @@ const CONTROL_HEADER = "X-Stuby-Control"
 const POST = "POST"
 
 const HTTP_405 = http.StatusMethodNotAllowed
-const HTTP_400 = http.StatusMethodNotAllowed
+const HTTP_400 = http.StatusBadRequest
+const HTTP_501 = http.StatusNotImplemented
 
 const CMD_EXPECT = "expect"
 const CMD_DEFAULTS = "defaults"
@@ -35,7 +36,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	if action != "" {
 		switch action {
 		case CMD_EXPECT:
-			logging.Trace.Println("Writing expectations")
 			if r.Method != POST {
 				onError(w, HTTP_405, "Method not allowed", r.Method)
 				return
@@ -59,19 +59,18 @@ func handler(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 
-			logging.Trace.Printf("Adding %#v", expectation)
-
 			expectations.PushBack(expectation)
-
+			logging.Trace.Printf("Expecation %#v added", expectation)
 		case CMD_DEFAULTS:
 
-			logging.Trace.Println("Set up defaults")
+			onError(w, HTTP_501, "Defaults not implemented", "")
 		case CMD_ASSERT:
 
-			status, message := assertion.Report()
-
+			status, message := assertion.Report(expectations.Front() == nil)
 			w.WriteHeader(status)
 			io.WriteString(w, message)
+
+			logging.Info.Printf("Assert result: %v %v\n", status, message)
 		default:
 
 			onError(w, HTTP_400, "Bad request", "Unknown action: "+action)
@@ -91,7 +90,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		response := assertion.Assert(&expectation, request)
-
+		logging.Info.Printf(
+			"%v %v %v \n", request.Method, response.Status, request.Path)
 		w.WriteHeader(response.Status)
 		io.WriteString(w, response.Body)
 	}

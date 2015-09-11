@@ -40,15 +40,20 @@ func Assert(e *protocol.Expectation, req protocol.Request) protocol.Response {
 	return response
 }
 
-func Report() (int, string) {
+func Report(all_expectations_done bool) (int, string) {
 	isOk := true
 	message := ""
 
-	for e := assertions.Front(); e != nil; e = e.Next() {
+	if all_expectations_done {
+		for e := assertions.Front(); e != nil; e = e.Next() {
 
-		isOk = isOk && e.Value.(Assertion).IsOk
+			isOk = isOk && e.Value.(Assertion).IsOk
 
-		message += "\n" + e.Value.(Assertion).Msg
+			message += "\n" + e.Value.(Assertion).Msg
+		}
+	} else {
+		isOk = false
+		message = "not all expecations used"
 	}
 
 	var status int
